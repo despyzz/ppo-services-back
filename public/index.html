@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель - PPO Services</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Админ-панель</h1>
+            <p>Управление системой PPO Services</p>
+        </div>
+
+        <!-- Секция авторизации -->
+        <div id="authSection" class="auth-section">
+            <div class="content">
+                <h2 class="section-title">🔐 Авторизация</h2>
+                <div id="authAlert"></div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Имя пользователя:</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Пароль:</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit" class="btn">Войти</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Основное содержимое -->
+        <div id="mainContent" class="hidden">
+            <!-- Навигация -->
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active" data-page="dashboard" onclick="navigateToPage('dashboard')">
+                            📊 Главная
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/public/documents.html" class="nav-link">
+                            📄 Документы
+                        </a>
+                    </li>
+                    <li class="nav-item" style="margin-left: auto;">
+                        <span class="user-info" style="color: #666; padding: 10px 20px;">Добро пожаловать!</span>
+                        <button onclick="logout()" class="btn btn-danger">Выйти</button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="content">
+                <!-- Главная страница -->
+                <div id="dashboard" class="page">
+                    <h2 class="section-title">📊 Главная панель</h2>
+                </div>
+
+                <!-- Страница документов -->
+                <div id="documents" class="page hidden">
+                    <h2 class="section-title">📄 Управление документами</h2>
+                    <div id="documentsAlert"></div>
+                    
+                    <!-- Форма добавления документа -->
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h3>Добавить новый документ</h3>
+                        <form id="documentForm" enctype="multipart/form-data">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                                <div class="form-group">
+                                    <label for="docTitle">Название документа:</label>
+                                    <input type="text" id="docTitle" name="title" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="docTarget">Тип документа:</label>
+                                    <select id="docTarget" name="target" required>
+                                        <option value="">Выберите тип</option>
+                                        <option value="EMPLOYEE">Для сотрудников</option>
+                                        <option value="STUDENT">Для студентов</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="docFile">Файл документа:</label>
+                                <input type="file" id="docFile" name="file" required accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif">
+                            </div>
+                            <button type="submit" class="btn btn-success">Добавить документ</button>
+                        </form>
+                    </div>
+
+                    <!-- Фильтры -->
+                    <div class="filter-section" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h3>Фильтрация документов</h3>
+                        <div style="display: flex; gap: 20px; align-items: end; flex-wrap: wrap;">
+                            <div class="form-group" style="flex: 1; min-width: 200px;">
+                                <label for="targetFilter">Тип документа:</label>
+                                <select id="targetFilter">
+                                    <option value="">Все документы</option>
+                                    <option value="EMPLOYEE">Для сотрудников</option>
+                                    <option value="STUDENT">Для студентов</option>
+                                </select>
+                            </div>
+                            <button onclick="loadDocuments()" class="btn">Применить фильтр</button>
+                            <button onclick="clearFilters()" class="btn btn-secondary">Очистить</button>
+                        </div>
+                    </div>
+
+                    <!-- Таблица документов -->
+                    <div class="table-container">
+                        <table id="documentsTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Название</th>
+                                    <th>Тип</th>
+                                    <th>Файл</th>
+                                    <th>Размер</th>
+                                    <th>Дата создания</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody id="documentsTableBody">
+                                <tr>
+                                    <td colspan="7" style="text-align: center; padding: 20px;">Загрузка...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Страница пользователей -->
+                <div id="users" class="page hidden">
+                    <h2 class="section-title">👥 Управление пользователями</h2>
+                    <div id="usersAlert"></div>
+                    <p>Функционал управления пользователями будет добавлен в будущих версиях.</p>
+                </div>
+
+                <!-- Страница настроек -->
+                <div id="settings" class="page hidden">
+                    <h2 class="section-title">⚙️ Настройки системы</h2>
+                    <div id="settingsAlert"></div>
+                    <p>Настройки системы будут добавлены в будущих версиях.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для редактирования документа -->
+    <div id="editDocumentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Редактировать документ</h3>
+                <button class="close" onclick="closeModal('editDocumentModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editDocumentForm">
+                    <input type="hidden" id="editDocumentId">
+                    <div class="form-group">
+                        <label for="editDocumentTitle">Название документа:</label>
+                        <input type="text" id="editDocumentTitle" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDocumentTarget">Тип документа:</label>
+                        <select id="editDocumentTarget" required>
+                            <option value="EMPLOYEE">Для сотрудников</option>
+                            <option value="STUDENT">Для студентов</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDocumentFile">Новый файл (оставьте пустым, чтобы не изменять):</label>
+                        <input type="file" id="editDocumentFile" accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('editDocumentModal')">Отмена</button>
+                <button type="button" class="btn btn-success" onclick="saveDocumentChanges()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключение скриптов -->
+    <script src="js/admin.js"></script>
+    <script src="js/documents.js"></script>
+    <script>
+        // Обработка формы авторизации
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const result = await AdminApp.login(username, password);
+            AdminApp.showAlert('authAlert', result.message, result.success ? 'success' : 'error');
+            
+            if (result.success) {
+                loadDashboardStats();
+            }
+        });
+
+        // Загрузка статистики для главной страницы
+        async function loadDashboardStats() {
+            try {
+                const response = await fetch('/documents');
+                const data = await response.json();
+
+                if (response.ok) {
+                    const stats = {
+                        total: data.documents.length,
+                        employee: data.documents.filter(d => d.target === 'EMPLOYEE').length,
+                        student: data.documents.filter(d => d.target === 'STUDENT').length
+                    };
+
+                    document.getElementById('totalDocuments').textContent = stats.total;
+                    document.getElementById('employeeDocuments').textContent = stats.employee;
+                    document.getElementById('studentDocuments').textContent = stats.student;
+                    document.getElementById('totalUsers').textContent = '1'; // Пока статично
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки статистики:', error);
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            if (AdminApp.authToken()) {
+                loadDashboardStats();
+            }
+        });
+    </script>
+</body>
+</html>
