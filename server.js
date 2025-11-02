@@ -50,12 +50,14 @@ const authRoutes = require('./routes/authRoutes');
 const documentRoutes = require('./routes/documentRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const newsRoutes = require('./routes/newsRoutes');
+const projectRoutes = require('./routes/projectRoutes');
 
 // Подключение роутов
 app.use('/auth', authRoutes);
 app.use('/documents', documentRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/news', newsRoutes);
+app.use('/projects', projectRoutes);
 
 // Главная страница - редирект на админ-панель
 app.get('/', (req, res) => {
@@ -139,6 +141,11 @@ async function startServer() {
       console.log(`   GET /news/:id - Получение новости по ID`);
       console.log(`   PUT /news/:id - Обновление новости (требует авторизации)`);
       console.log(`   DELETE /news/:id - Удаление новости (требует авторизации)`);
+      console.log(`   POST /projects - Создание проекта (требует авторизации)`);
+      console.log(`   GET /projects - Получение всех проектов`);
+      console.log(`   GET /projects/:id - Получение проекта по ID`);
+      console.log(`   PUT /projects/:id - Обновление проекта (требует авторизации)`);
+      console.log(`   DELETE /projects/:id - Удаление проекта (требует авторизации)`);
     });
   } catch (error) {
     console.error('Ошибка запуска сервера:', error);
