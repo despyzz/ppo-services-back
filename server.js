@@ -33,19 +33,29 @@ if (!fs.existsSync(documentsDir)) {
   console.log('Создана папка для документов:', documentsDir);
 }
 
+// Создание папки для изображений, если она не существует
+const imagesDir = path.join(__dirname, 'images');
+if (!fs.existsSync(imagesDir)) {
+  fs.mkdirSync(imagesDir, { recursive: true });
+  console.log('Создана папка для изображений:', imagesDir);
+}
+
 // Раздача статических файлов
 app.use('/documents', express.static(path.join(__dirname, 'documents')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
 // Импорт роутов
 const authRoutes = require('./routes/authRoutes');
 const documentRoutes = require('./routes/documentRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
+const newsRoutes = require('./routes/newsRoutes');
 
 // Подключение роутов
 app.use('/auth', authRoutes);
 app.use('/documents', documentRoutes);
 app.use('/categories', categoryRoutes);
+app.use('/news', newsRoutes);
 
 // Главная страница - редирект на админ-панель
 app.get('/', (req, res) => {
@@ -64,6 +74,13 @@ app.use((error, req, res, next) => {
   }
   
   if (error.message.includes('Неподдерживаемый тип файла')) {
+    // Определяем тип ошибки - документ или изображение
+    if (error.message.includes('JPG, PNG, GIF, WEBP')) {
+      return res.status(400).json({
+        error: 'Неподдерживаемый тип файла',
+        message: 'Разрешены: JPG, PNG, GIF, WEBP'
+      });
+    }
     return res.status(400).json({
       error: 'Неподдерживаемый тип файла',
       message: 'Разрешены: PDF, DOC, DOCX, TXT, JPG, PNG, GIF'
@@ -117,6 +134,11 @@ async function startServer() {
       console.log(`   POST /categories/:categoryId/items - Добавление пункта (требует авторизации)`);
       console.log(`   PUT /categories/:categoryId/items/:itemId - Обновление пункта (требует авторизации)`);
       console.log(`   DELETE /categories/:categoryId/items/:itemId - Удаление пункта (требует авторизации)`);
+      console.log(`   POST /news - Создание новости (требует авторизации)`);
+      console.log(`   GET /news - Получение всех новостей`);
+      console.log(`   GET /news/:id - Получение новости по ID`);
+      console.log(`   PUT /news/:id - Обновление новости (требует авторизации)`);
+      console.log(`   DELETE /news/:id - Удаление новости (требует авторизации)`);
     });
   } catch (error) {
     console.error('Ошибка запуска сервера:', error);
