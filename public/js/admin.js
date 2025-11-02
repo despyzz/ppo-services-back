@@ -183,14 +183,15 @@ function navigateToPage(page) {
 
 // API запросы с авторизацией
 async function apiRequest(url, options = {}) {
-    const defaultOptions = {
-        headers: {
-            'Authorization': `Bearer ${authToken}`,
-            ...options.headers
-        }
+    const headers = {
+        'Authorization': `Bearer ${authToken}`,
+        ...(options.headers || {})
     };
     
-    return fetch(url, { ...defaultOptions, ...options });
+    return fetch(url, { 
+        ...options,
+        headers: headers
+    });
 }
 
 // Обработка ошибок API

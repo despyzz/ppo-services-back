@@ -40,10 +40,12 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 // Импорт роутов
 const authRoutes = require('./routes/authRoutes');
 const documentRoutes = require('./routes/documentRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
 
 // Подключение роутов
 app.use('/auth', authRoutes);
 app.use('/documents', documentRoutes);
+app.use('/categories', categoryRoutes);
 
 // Главная страница - редирект на админ-панель
 app.get('/', (req, res) => {
@@ -107,6 +109,14 @@ async function startServer() {
       console.log(`   GET /documents/:id - Получение документа по ID`);
       console.log(`   PUT /documents/:id - Обновление документа (требует авторизации)`);
       console.log(`   DELETE /documents/:id - Удаление документа (требует авторизации)`);
+      console.log(`   POST /categories - Создание категории (требует авторизации)`);
+      console.log(`   GET /categories - Получение всех категорий`);
+      console.log(`   GET /categories/:id - Получение категории по ID`);
+      console.log(`   PUT /categories/:id - Обновление категории (требует авторизации)`);
+      console.log(`   DELETE /categories/:id - Удаление категории (требует авторизации)`);
+      console.log(`   POST /categories/:categoryId/items - Добавление пункта (требует авторизации)`);
+      console.log(`   PUT /categories/:categoryId/items/:itemId - Обновление пункта (требует авторизации)`);
+      console.log(`   DELETE /categories/:categoryId/items/:itemId - Удаление пункта (требует авторизации)`);
     });
   } catch (error) {
     console.error('Ошибка запуска сервера:', error);
