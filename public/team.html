@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Команда - PPO Services</title>
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👥 Команда</h1>
+            <p>Управление командой PPO Services</p>
+        </div>
+
+        <nav class="nav">
+            <ul class="nav-list">
+                <li class="nav-item"><a class="nav-link" href="/public/index.html">⬅️ Назад в панель</a></li>
+                <li class="nav-item" style="margin-left: auto;">
+                    <span class="user-info" style="color: #666; padding: 10px 20px;">Добро пожаловать!</span>
+                    <button onclick="logout()" class="btn btn-danger">Выйти</button>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="content" id="mainContent">
+            <div id="teamAlert"></div>
+
+            <!-- Форма добавления члена команды -->
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                <h3>Добавить нового члена команды</h3>
+                <form id="teamMemberForm" enctype="multipart/form-data">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label for="memberName">Имя:</label>
+                            <input type="text" id="memberName" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="memberRole">Роль:</label>
+                            <select id="memberRole" name="role" required>
+                                <option value="">Выберите роль</option>
+                                <option value="CHAIRMAN">Председатель</option>
+                                <option value="DEPUTY_CHAIRMAN">Заместитель председателя</option>
+                                <option value="SUPERVISOR">Руководитель структурного подразделения</option>
+                            </select>
+                            <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                                Примечание: Председатель и заместитель председателя могут быть только по одному
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="memberDescription">Описание (Markdown):</label>
+                        <textarea id="memberDescription" name="description" rows="10" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="memberImage">Изображение:</label>
+                        <input type="file" id="memberImage" name="image" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Добавить члена команды</button>
+                </form>
+            </div>
+
+            <!-- Список членов команды -->
+            <div class="table-container">
+                <table id="teamTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Имя</th>
+                            <th>Роль</th>
+                            <th>Изображение</th>
+                            <th>Дата создания</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teamTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 20px;">Загрузка...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно для редактирования члена команды -->
+    <div id="editMemberModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Редактировать члена команды</h3>
+                <button class="close" onclick="closeModal('editMemberModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editMemberForm">
+                    <input type="hidden" id="editMemberId">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label for="editMemberName">Имя:</label>
+                            <input type="text" id="editMemberName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editMemberRole">Роль:</label>
+                            <select id="editMemberRole" required>
+                                <option value="CHAIRMAN">Председатель</option>
+                                <option value="DEPUTY_CHAIRMAN">Заместитель председателя</option>
+                                <option value="SUPERVISOR">Руководитель структурного подразделения</option>
+                            </select>
+                            <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                                Примечание: Председатель и заместитель председателя могут быть только по одному
+                            </small>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="editMemberDescription">Описание (Markdown):</label>
+                        <textarea id="editMemberDescription" rows="10" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editMemberImage">Новое изображение (оставьте пустым, чтобы не изменять):</label>
+                        <input type="file" id="editMemberImage" accept="image/jpeg,image/jpg,image/png,image/gif,image/webp">
+                        <div id="currentImagePreview" style="margin-top: 10px;"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('editMemberModal')">Отмена</button>
+                <button type="button" class="btn btn-success" onclick="saveMemberChanges()">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/admin.js"></script>
+    <script src="js/team.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (AdminApp.authToken()) {
+                // Автозагрузка членов команды при открытии страницы
+                loadTeamMembers();
+            } else {
+                // Если токена нет — отправляем на главную для авторизации
+                window.location.href = '/public/index.html';
+            }
+        });
+    </script>
+</body>
+</html>
+

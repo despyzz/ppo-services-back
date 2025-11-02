@@ -51,6 +51,7 @@ const documentRoutes = require('./routes/documentRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const newsRoutes = require('./routes/newsRoutes');
 const projectRoutes = require('./routes/projectRoutes');
+const teamMemberRoutes = require('./routes/teamMemberRoutes');
 
 // Подключение роутов
 app.use('/auth', authRoutes);
@@ -58,6 +59,7 @@ app.use('/documents', documentRoutes);
 app.use('/categories', categoryRoutes);
 app.use('/news', newsRoutes);
 app.use('/projects', projectRoutes);
+app.use('/team-members', teamMemberRoutes);
 
 // Главная страница - редирект на админ-панель
 app.get('/', (req, res) => {
@@ -146,6 +148,14 @@ async function startServer() {
       console.log(`   GET /projects/:id - Получение проекта по ID`);
       console.log(`   PUT /projects/:id - Обновление проекта (требует авторизации)`);
       console.log(`   DELETE /projects/:id - Удаление проекта (требует авторизации)`);
+      console.log(`   POST /team-members - Создание члена команды (требует авторизации)`);
+      console.log(`   GET /team-members - Получение всех членов команды`);
+      console.log(`   GET /team-members/chairman - Получение председателя`);
+      console.log(`   GET /team-members/deputy-chairman - Получение заместителя председателя`);
+      console.log(`   GET /team-members/supervisors - Получение руководителей`);
+      console.log(`   GET /team-members/:id - Получение члена команды по ID`);
+      console.log(`   PUT /team-members/:id - Обновление члена команды (требует авторизации)`);
+      console.log(`   DELETE /team-members/:id - Удаление члена команды (требует авторизации)`);
     });
   } catch (error) {
     console.error('Ошибка запуска сервера:', error);

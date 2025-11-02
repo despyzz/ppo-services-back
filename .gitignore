@@ -11,6 +11,8 @@ db/database.sqlite-journal
 # Загруженные файлы
 documents/*
 !documents/.gitkeep
+images/*
+!images/.gitkeep
 
 # Переменные окружения
 .env
