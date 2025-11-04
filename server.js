@@ -52,6 +52,7 @@ const categoryRoutes = require('./routes/categoryRoutes');
 const newsRoutes = require('./routes/newsRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const teamMemberRoutes = require('./routes/teamMemberRoutes');
+const mainPageStatsRoutes = require('./routes/mainPageStatsRoutes');
 
 // Подключение роутов
 app.use('/auth', authRoutes);
@@ -60,6 +61,7 @@ app.use('/categories', categoryRoutes);
 app.use('/news', newsRoutes);
 app.use('/projects', projectRoutes);
 app.use('/team-members', teamMemberRoutes);
+app.use('/main-page-stats', mainPageStatsRoutes);
 
 // Главная страница - редирект на админ-панель
 app.get('/', (req, res) => {
@@ -156,6 +158,8 @@ async function startServer() {
       console.log(`   GET /team-members/:id - Получение члена команды по ID`);
       console.log(`   PUT /team-members/:id - Обновление члена команды (требует авторизации)`);
       console.log(`   DELETE /team-members/:id - Удаление члена команды (требует авторизации)`);
+      console.log(`   GET /main-page-stats - Получить статистику главной страницы`);
+      console.log(`   PUT /main-page-stats - Изменить статистику (требует авторизации)`);
     });
   } catch (error) {
     console.error('Ошибка запуска сервера:', error);
