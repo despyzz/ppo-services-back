@@ -11,13 +11,6 @@ const { authenticateToken } = require('../middleware/authMiddleware');
 router.post('/login', AuthController.login);
 
 /**
- * @route POST /auth/register
- * @desc Регистрация нового пользователя
- * @access Public
- */
-router.post('/register', AuthController.register);
-
-/**
  * @route GET /auth/me
  * @desc Получение информации о текущем пользователе
  * @access Private

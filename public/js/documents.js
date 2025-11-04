@@ -9,12 +9,6 @@ function initDocumentsModule() {
     if (documentForm) {
         documentForm.addEventListener('submit', handleAddDocument);
     }
-
-    // Обработка формы редактирования документа
-    const editDocumentForm = document.getElementById('editDocumentForm');
-    if (editDocumentForm) {
-        editDocumentForm.addEventListener('submit', handleEditDocument);
-    }
 }
 
 // Добавление документа

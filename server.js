@@ -122,44 +122,57 @@ async function startServer() {
     // Запуск сервера
     app.listen(PORT, () => {
       console.log(`🚀 Сервер запущен на порту ${PORT}`);
-      console.log(`📁 Админ-панель: http://localhost:${PORT}/public/index.html`);
-      console.log(`📚 API документация:`);
-      console.log(`   POST /auth/login - Авторизация`);
-      console.log(`   POST /auth/register - Регистрация`);
-      console.log(`   GET /auth/me - Информация о пользователе`);
-      console.log(`   POST /documents - Создание документа (требует авторизации)`);
-      console.log(`   GET /documents - Получение всех документов`);
-      console.log(`   GET /documents/:id - Получение документа по ID`);
-      console.log(`   PUT /documents/:id - Обновление документа (требует авторизации)`);
-      console.log(`   DELETE /documents/:id - Удаление документа (требует авторизации)`);
-      console.log(`   POST /categories - Создание категории (требует авторизации)`);
-      console.log(`   GET /categories - Получение всех категорий`);
-      console.log(`   GET /categories/:id - Получение категории по ID`);
-      console.log(`   PUT /categories/:id - Обновление категории (требует авторизации)`);
-      console.log(`   DELETE /categories/:id - Удаление категории (требует авторизации)`);
-      console.log(`   POST /categories/:categoryId/items - Добавление пункта (требует авторизации)`);
-      console.log(`   PUT /categories/:categoryId/items/:itemId - Обновление пункта (требует авторизации)`);
-      console.log(`   DELETE /categories/:categoryId/items/:itemId - Удаление пункта (требует авторизации)`);
-      console.log(`   POST /news - Создание новости (требует авторизации)`);
-      console.log(`   GET /news - Получение всех новостей`);
-      console.log(`   GET /news/:id - Получение новости по ID`);
-      console.log(`   PUT /news/:id - Обновление новости (требует авторизации)`);
-      console.log(`   DELETE /news/:id - Удаление новости (требует авторизации)`);
-      console.log(`   POST /projects - Создание проекта (требует авторизации)`);
-      console.log(`   GET /projects - Получение всех проектов`);
-      console.log(`   GET /projects/:id - Получение проекта по ID`);
-      console.log(`   PUT /projects/:id - Обновление проекта (требует авторизации)`);
-      console.log(`   DELETE /projects/:id - Удаление проекта (требует авторизации)`);
-      console.log(`   POST /team-members - Создание члена команды (требует авторизации)`);
-      console.log(`   GET /team-members - Получение всех членов команды`);
-      console.log(`   GET /team-members/chairman - Получение председателя`);
-      console.log(`   GET /team-members/deputy-chairman - Получение заместителя председателя`);
-      console.log(`   GET /team-members/supervisors - Получение руководителей`);
-      console.log(`   GET /team-members/:id - Получение члена команды по ID`);
-      console.log(`   PUT /team-members/:id - Обновление члена команды (требует авторизации)`);
-      console.log(`   DELETE /team-members/:id - Удаление члена команды (требует авторизации)`);
-      console.log(`   GET /main-page-stats - Получить статистику главной страницы`);
-      console.log(`   PUT /main-page-stats - Изменить статистику (требует авторизации)`);
+      console.log('\n' + '--- 🖥️ Админ-панель ---\n');
+      console.log(`  📁 Панель: http://localhost:${PORT}/public/index.html`);
+
+      console.log('\n' + '--- 🛡️ Авторизация ---\n');
+      console.log('   POST /auth/login            - Вход (логин)');
+      console.log('   🔒 GET  /auth/me               - Текущий пользователь');
+
+      console.log('\n' + '--- 📄 Документы ---\n');
+      console.log('   🔒 POST   /documents            - Создать документ');
+      console.log('   GET    /documents            - Получить все');
+      console.log('   GET    /documents/:id        - Получить по ID');
+      console.log('   🔒 PUT    /documents/:id        - Обновить');
+      console.log('   🔒 DELETE /documents/:id        - Удалить');
+
+      console.log('\n' + '--- 📖 Справочник ---\n');
+      console.log('   🔒 POST   /categories               - Создать категорию');
+      console.log('   GET    /categories               - Получить все категории');
+      console.log('   GET    /categories/:id           - По ID');
+      console.log('   🔒 PUT    /categories/:id           - Обновить');
+      console.log('   🔒 DELETE /categories/:id           - Удалить категорию');
+      console.log('   🔒 POST   /categories/:catId/items  - Добавить пункт');
+      console.log('   🔒 PUT    /categories/:catId/items/:itemId    - Обновить пункт');
+      console.log('   🔒 DELETE /categories/:catId/items/:itemId  - Удалить пункт');
+
+      console.log('\n' + '--- 📰 Новости ---\n');
+      console.log('   🔒 POST   /news              - Создать новость');
+      console.log('   GET    /news              - Получить все');
+      console.log('   GET    /news/:id          - По ID');
+      console.log('   🔒 PUT    /news/:id          - Обновить');
+      console.log('   🔒 DELETE /news/:id          - Удалить');
+
+      console.log('\n' + '--- 🚀 Проекты ---\n');
+      console.log('   🔒 POST   /projects          - Создать проект');
+      console.log('   GET    /projects          - Получить все');
+      console.log('   GET    /projects/:id      - По ID');
+      console.log('   🔒 PUT    /projects/:id      - Обновить');
+      console.log('   🔒 DELETE /projects/:id      - Удалить');
+
+      console.log('\n' + '--- 👥Команда ---\n');
+      console.log('   🔒 POST   /team-members                - Создать члена');
+      console.log('   GET    /team-members                - Все члены');
+      console.log('   GET    /team-members/chairman          - Только председатель');
+      console.log('   GET    /team-members/deputy-chairman   - Только зам. председателя');
+      console.log('   GET    /team-members/supervisors       - Руководители подразделений');
+      console.log('   GET    /team-members/:id            - По ID');
+      console.log('   🔒 PUT    /team-members/:id            - Обновить');
+      console.log('   🔒 DELETE /team-members/:id            - Удалить');
+
+      console.log('\n' + '--- 🏠 Главная ---\n');
+      console.log('   GET    /main-page-stats        - Получить статистику');
+      console.log('   🔒 PUT    /main-page-stats        - Обновить статистику');
     });
   } catch (error) {
     console.error('Ошибка запуска сервера:', error);

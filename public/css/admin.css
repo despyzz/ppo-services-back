@@ -97,7 +97,7 @@ body {
 
 .btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+    box-shadow: 0 3px 3px rgba(79, 172, 254, 0.4);
 }
 
 .btn-danger {
@@ -245,6 +245,43 @@ tr:hover {
     color: white;
 }
 
+/* Модификации для многопунктовой горизонтальной навигации */
+.nav-list {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    gap: 10px !important;
+    padding-bottom: 2px;
+}
+
+.nav-link {
+    padding: 6px 10px;
+    font-size: 14px;
+    min-width: 40px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 120px;
+}
+
+@media (max-width: 900px) {
+    .nav-list {
+        gap: 4px !important;
+    }
+    .nav-link {
+        font-size: 0; /* Скрыть текст, оставить только эмодзи */
+        padding: 7px 7px;
+        min-width: auto;
+        max-width: 50px;
+    }
+    .nav-link::before {
+        font-size: 20px;
+        margin-right: 0;
+    }
+    .nav-link span, .nav-link .nav-text {
+        display:none;
+    }
+}
+
 /* Модальные окна */
 .modal {
     display: none;
@@ -365,4 +402,31 @@ tr:hover {
         width: 95%;
         padding: 20px;
     }
+}
+
+.mini-profile {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-right: 3px;
+}
+
+.btn-mini {
+    background: none;
+    color: #333;
+    border: none;
+    padding: 3px 8px;
+    font-size: 20px;
+    cursor: pointer;
+    vertical-align: middle;
+    margin: 0;
+}
+
+.btn-mini:hover { 
+    color:#ff5555;
+}
+
+.profile-emoji {
+    font-size: 18px;
+    padding-right: 2px;
 }

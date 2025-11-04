@@ -94,6 +94,9 @@ async function loadUserInfo() {
 
 // Обновление информации о пользователе в интерфейсе
 function updateUserInfo(user) {
+    const miniUser = document.getElementById('miniUser');
+    if (miniUser)
+        miniUser.textContent = user.username ? ('👤 '+user.username) : '👤';
     const userInfoElements = document.querySelectorAll('.user-info');
     userInfoElements.forEach(element => {
         element.textContent = `Добро пожаловать, ${user.username}!`;
@@ -181,17 +184,19 @@ function navigateToPage(page) {
     }
 }
 
-// API запросы с авторизацией
+// API запросы с авто-logout при 401
 async function apiRequest(url, options = {}) {
     const headers = {
         'Authorization': `Bearer ${authToken}`,
         ...(options.headers || {})
     };
-    
-    return fetch(url, { 
-        ...options,
-        headers: headers
-    });
+    const response = await fetch(url, { ...options, headers });
+    if (response.status === 401) {
+        logout();
+        window.location.href = '/public/index.html';
+        return response;
+    }
+    return response;
 }
 
 // Обработка ошибок API

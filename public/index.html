@@ -73,8 +73,10 @@
                         </a>
                     </li>
                     <li class="nav-item" style="margin-left: auto;">
-                        <span class="user-info" style="color: #666; padding: 10px 20px;">Добро пожаловать!</span>
-                        <button onclick="logout()" class="btn btn-danger">Выйти</button>
+                        <div class="mini-profile">
+                            <span id="miniUser" title="Профиль" class="profile-emoji">👤</span>
+                            <button onclick="logout()" class="btn btn-mini" title="Выйти">🚪</button>
+                        </div>
                     </li>
                 </ul>
             </nav>
@@ -220,40 +222,6 @@
 
             const result = await AdminApp.login(username, password);
             AdminApp.showAlert('authAlert', result.message, result.success ? 'success' : 'error');
-            
-            if (result.success) {
-                loadDashboardStats();
-            }
-        });
-
-        // Загрузка статистики для главной страницы
-        async function loadDashboardStats() {
-            try {
-                const response = await fetch('/documents');
-                const data = await response.json();
-
-                if (response.ok) {
-                    const stats = {
-                        total: data.documents.length,
-                        employee: data.documents.filter(d => d.target === 'EMPLOYEE').length,
-                        student: data.documents.filter(d => d.target === 'STUDENT').length
-                    };
-
-                    document.getElementById('totalDocuments').textContent = stats.total;
-                    document.getElementById('employeeDocuments').textContent = stats.employee;
-                    document.getElementById('studentDocuments').textContent = stats.student;
-                    document.getElementById('totalUsers').textContent = '1'; // Пока статично
-                }
-            } catch (error) {
-                console.error('Ошибка загрузки статистики:', error);
-            }
-        }
-
-        // Инициализация при загрузке страницы
-        document.addEventListener('DOMContentLoaded', function() {
-            if (AdminApp.authToken()) {
-                loadDashboardStats();
-            }
         });
     </script>
 </body>
