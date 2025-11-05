@@ -1,5 +1,5 @@
 # Production-ready Node.js Express + SQLite Dockerfile
-FROM node:lts-alpine
+FROM node:18
 
 WORKDIR /app
 
