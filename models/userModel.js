@@ -51,17 +51,6 @@ class UserModel {
     return await bcrypt.compare(password, hash);
   }
 
-  // Проверка существования пользователей и создание дефолтного админа
-  static async initializeDefaultAdmin() {
-    const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get();
-    
-    if (userCount.count === 0) {
-      console.log('Создание дефолтного администратора...');
-      await this.create('admin', 'admin123');
-      console.log('Дефолтный администратор создан: username=admin, password=admin123');
-    }
-  }
-
   // Получение всех пользователей (для админки)
   static getAll() {
     const stmt = db.prepare('SELECT id, username, created_at FROM users ORDER BY created_at DESC');
