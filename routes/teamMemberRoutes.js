@@ -48,58 +48,171 @@ const upload = multer({
 });
 
 /**
- * @route POST /team-members
- * @desc Создание нового члена команды
- * @access Private
+ * @swagger
+ * tags:
+ *   name: Team
+ *   description: Управление командой
+ */
+
+/**
+ * @swagger
+ * /team-members:
+ *   post:
+ *     tags: [Team]
+ *     summary: Создание нового члена команды
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - role
+ *               - name
+ *               - description
+ *               - image
+ *             properties:
+ *               role:
+ *                 type: string
+ *                 enum: [CHAIRMAN, DEPUTY_CHAIRMAN, SUPERVISOR]
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: Член команды создан
  */
 router.post('/', authenticateToken, upload.single('image'), TeamMemberController.createTeamMember);
 
 /**
- * @route GET /team-members
- * @desc Получение всех членов команды
- * @access Public
+ * @swagger
+ * /team-members:
+ *   get:
+ *     tags: [Team]
+ *     summary: Получение всех членов команды
+ *     responses:
+ *       200:
+ *         description: Список членов команды
  */
 router.get('/', TeamMemberController.getAllTeamMembers);
 
 /**
- * @route GET /team-members/chairman
- * @desc Получение председателя (только один)
- * @access Public
+ * @swagger
+ * /team-members/chairman:
+ *   get:
+ *     tags: [Team]
+ *     summary: Получение председателя
+ *     responses:
+ *       200:
+ *         description: Председатель найден
+ *       404:
+ *         description: Председатель не назначен
  */
 router.get('/chairman', TeamMemberController.getChairman);
 
 /**
- * @route GET /team-members/deputy-chairman
- * @desc Получение заместителя председателя (только один)
- * @access Public
+ * @swagger
+ * /team-members/deputy-chairman:
+ *   get:
+ *     tags: [Team]
+ *     summary: Получение заместителя председателя
+ *     responses:
+ *       200:
+ *         description: Заместитель найден
+ *       404:
+ *         description: Заместитель не назначен
  */
 router.get('/deputy-chairman', TeamMemberController.getDeputyChairman);
 
 /**
- * @route GET /team-members/supervisors
- * @desc Получение руководителей структурных подразделений
- * @access Public
+ * @swagger
+ * /team-members/supervisors:
+ *   get:
+ *     tags: [Team]
+ *     summary: Получение руководителей структурных подразделений
+ *     responses:
+ *       200:
+ *         description: Список руководителей
  */
 router.get('/supervisors', TeamMemberController.getSupervisors);
 
 /**
- * @route GET /team-members/:id
- * @desc Получение члена команды по ID
- * @access Public
+ * @swagger
+ * /team-members/{id}:
+ *   get:
+ *     tags: [Team]
+ *     summary: Получение члена команды по ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Член команды найден
  */
 router.get('/:id', TeamMemberController.getTeamMemberById);
 
 /**
- * @route PUT /team-members/:id
- * @desc Обновление члена команды
- * @access Private
+ * @swagger
+ * /team-members/{id}:
+ *   put:
+ *     tags: [Team]
+ *     summary: Обновление члена команды
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               role:
+ *                 type: string
+ *                 enum: [CHAIRMAN, DEPUTY_CHAIRMAN, SUPERVISOR]
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Член команды обновлен
  */
 router.put('/:id', authenticateToken, upload.single('image'), TeamMemberController.updateTeamMember);
 
 /**
- * @route DELETE /team-members/:id
- * @desc Удаление члена команды
- * @access Private
+ * @swagger
+ * /team-members/{id}:
+ *   delete:
+ *     tags: [Team]
+ *     summary: Удаление члена команды
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Член команды удален
  */
 router.delete('/:id', authenticateToken, TeamMemberController.deleteTeamMember);
 

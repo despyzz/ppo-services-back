@@ -4,6 +4,8 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const UserModel = require('./models/userModel');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
 
 // Создание экземпляра Express приложения
 const app = express();
@@ -96,6 +98,40 @@ app.use((error, req, res, next) => {
   next(error);
 });
 
+// Swagger только в dev режиме
+if (process.env.NODE_ENV !== 'production') {
+  const swaggerDefinition = {
+    openapi: '3.0.0',
+    info: {
+      title: 'PPO Services Admin API',
+      version: '1.0.0',
+      description: 'Документация REST API админки PPO Services'
+    },
+    servers: [
+      {
+        url: `http://localhost:${PORT}`,
+        description: 'Local Development'
+      }
+    ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    },
+    security: [{bearerAuth: []}],
+  };
+  const options = {
+    swaggerDefinition,
+    apis: [path.join(__dirname, 'routes/*.js')]
+  };
+  const swaggerSpec = swaggerJSDoc(options);
+  app.use(['/api-docs', '/api-docs/'], swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+}
+
 // Обработка 404 ошибок
 app.use('*', (req, res) => {
   res.status(404).json({
@@ -119,57 +155,11 @@ async function startServer() {
     // Запуск сервера
     app.listen(PORT, () => {
       console.log(`🚀 Сервер запущен на порту ${PORT}`);
-      console.log('\n' + '--- 🖥️ Админ-панель ---\n');
-      console.log(`  📁 Панель: http://localhost:${PORT}/public/index.html`);
-
-      console.log('\n' + '--- 🛡️ Авторизация ---\n');
-      console.log('   POST /auth/login            - Вход (логин)');
-      console.log('   🔒 GET  /auth/me               - Текущий пользователь');
-
-      console.log('\n' + '--- 📄 Документы ---\n');
-      console.log('   🔒 POST   /documents            - Создать документ');
-      console.log('   GET    /documents            - Получить все');
-      console.log('   GET    /documents/:id        - Получить по ID');
-      console.log('   🔒 PUT    /documents/:id        - Обновить');
-      console.log('   🔒 DELETE /documents/:id        - Удалить');
-
-      console.log('\n' + '--- 📖 Справочник ---\n');
-      console.log('   🔒 POST   /categories               - Создать категорию');
-      console.log('   GET    /categories               - Получить все категории');
-      console.log('   GET    /categories/:id           - По ID');
-      console.log('   🔒 PUT    /categories/:id           - Обновить');
-      console.log('   🔒 DELETE /categories/:id           - Удалить категорию');
-      console.log('   🔒 POST   /categories/:catId/items  - Добавить пункт');
-      console.log('   🔒 PUT    /categories/:catId/items/:itemId    - Обновить пункт');
-      console.log('   🔒 DELETE /categories/:catId/items/:itemId  - Удалить пункт');
-
-      console.log('\n' + '--- 📰 Новости ---\n');
-      console.log('   🔒 POST   /news              - Создать новость');
-      console.log('   GET    /news              - Получить все');
-      console.log('   GET    /news/:id          - По ID');
-      console.log('   🔒 PUT    /news/:id          - Обновить');
-      console.log('   🔒 DELETE /news/:id          - Удалить');
-
-      console.log('\n' + '--- 🚀 Проекты ---\n');
-      console.log('   🔒 POST   /projects          - Создать проект');
-      console.log('   GET    /projects          - Получить все');
-      console.log('   GET    /projects/:id      - По ID');
-      console.log('   🔒 PUT    /projects/:id      - Обновить');
-      console.log('   🔒 DELETE /projects/:id      - Удалить');
-
-      console.log('\n' + '--- 👥Команда ---\n');
-      console.log('   🔒 POST   /team-members                - Создать члена');
-      console.log('   GET    /team-members                - Все члены');
-      console.log('   GET    /team-members/chairman          - Только председатель');
-      console.log('   GET    /team-members/deputy-chairman   - Только зам. председателя');
-      console.log('   GET    /team-members/supervisors       - Руководители подразделений');
-      console.log('   GET    /team-members/:id            - По ID');
-      console.log('   🔒 PUT    /team-members/:id            - Обновить');
-      console.log('   🔒 DELETE /team-members/:id            - Удалить');
-
-      console.log('\n' + '--- 🏠 Главная ---\n');
-      console.log('   GET    /main-page-stats        - Получить статистику');
-      console.log('   🔒 PUT    /main-page-stats        - Обновить статистику');
+      console.log(`📁 Админ-панель: http://localhost:${PORT}/public/index.html`);
+      
+      if (process.env.NODE_ENV !== 'production') {
+        console.log(`📚 Swagger UI: http://localhost:${PORT}/api-docs`);
+      }
     });
   } catch (error) {
     console.error('Ошибка запуска сервера:', error);

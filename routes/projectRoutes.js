@@ -48,37 +48,137 @@ const upload = multer({
 });
 
 /**
- * @route POST /projects
- * @desc Создание нового проекта
- * @access Private
+ * @swagger
+ * tags:
+ *   name: Projects
+ *   description: Управление проектами
+ */
+
+/**
+ * @swagger
+ * /projects:
+ *   post:
+ *     tags: [Projects]
+ *     summary: Создание нового проекта
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - target
+ *               - image
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               target:
+ *                 type: string
+ *                 enum: [EMPLOYEE, STUDENT]
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: Проект создан
  */
 router.post('/', authenticateToken, upload.single('image'), ProjectController.createProject);
 
 /**
- * @route GET /projects
- * @desc Получение всех проектов с фильтрацией
- * @access Public
+ * @swagger
+ * /projects:
+ *   get:
+ *     tags: [Projects]
+ *     summary: Получение всех проектов
+ *     parameters:
+ *       - in: query
+ *         name: target
+ *         schema:
+ *           type: string
+ *           enum: [EMPLOYEE, STUDENT]
+ *     responses:
+ *       200:
+ *         description: Список проектов
  */
 router.get('/', ProjectController.getAllProjects);
 
 /**
- * @route GET /projects/:id
- * @desc Получение проекта по ID
- * @access Public
+ * @swagger
+ * /projects/{id}:
+ *   get:
+ *     tags: [Projects]
+ *     summary: Получение проекта по ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Проект найден
  */
 router.get('/:id', ProjectController.getProjectById);
 
 /**
- * @route PUT /projects/:id
- * @desc Обновление проекта
- * @access Private
+ * @swagger
+ * /projects/{id}:
+ *   put:
+ *     tags: [Projects]
+ *     summary: Обновление проекта
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               target:
+ *                 type: string
+ *                 enum: [EMPLOYEE, STUDENT]
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Проект обновлен
  */
 router.put('/:id', authenticateToken, upload.single('image'), ProjectController.updateProject);
 
 /**
- * @route DELETE /projects/:id
- * @desc Удаление проекта
- * @access Private
+ * @swagger
+ * /projects/{id}:
+ *   delete:
+ *     tags: [Projects]
+ *     summary: Удаление проекта
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Проект удален
  */
 router.delete('/:id', authenticateToken, ProjectController.deleteProject);
 

@@ -4,58 +4,221 @@ const CategoryController = require('../controllers/categoryController');
 const { authenticateToken } = require('../middleware/authMiddleware');
 
 /**
- * @route POST /categories
- * @desc Создание новой категории
- * @access Private
+ * @swagger
+ * tags:
+ *   name: Categories
+ *   description: Управление справочником (категории и пункты)
+ */
+
+/**
+ * @swagger
+ * /categories:
+ *   post:
+ *     tags: [Categories]
+ *     summary: Создание новой категории
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - target
+ *             properties:
+ *               title:
+ *                 type: string
+ *               target:
+ *                 type: string
+ *                 enum: [EMPLOYEE, STUDENT]
+ *     responses:
+ *       201:
+ *         description: Категория создана
+ *       401:
+ *         description: Неавторизован
  */
 router.post('/', authenticateToken, CategoryController.createCategory);
 
 /**
- * @route GET /categories
- * @desc Получение всех категорий с фильтрацией
- * @access Public
+ * @swagger
+ * /categories:
+ *   get:
+ *     tags: [Categories]
+ *     summary: Получение всех категорий
+ *     parameters:
+ *       - in: query
+ *         name: target
+ *         schema:
+ *           type: string
+ *           enum: [EMPLOYEE, STUDENT]
+ *     responses:
+ *       200:
+ *         description: Список категорий
  */
 router.get('/', CategoryController.getAllCategories);
 
 /**
- * @route GET /categories/:id
- * @desc Получение категории по ID
- * @access Public
+ * @swagger
+ * /categories/{id}:
+ *   get:
+ *     tags: [Categories]
+ *     summary: Получение категории по ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Категория найдена
  */
 router.get('/:id', CategoryController.getCategoryById);
 
 /**
- * @route PUT /categories/:id
- * @desc Обновление категории
- * @access Private
+ * @swagger
+ * /categories/{id}:
+ *   put:
+ *     tags: [Categories]
+ *     summary: Обновление категории
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               target:
+ *                 type: string
+ *                 enum: [EMPLOYEE, STUDENT]
+ *     responses:
+ *       200:
+ *         description: Категория обновлена
  */
 router.put('/:id', authenticateToken, CategoryController.updateCategory);
 
 /**
- * @route DELETE /categories/:id
- * @desc Удаление категории
- * @access Private
+ * @swagger
+ * /categories/{id}:
+ *   delete:
+ *     tags: [Categories]
+ *     summary: Удаление категории
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Категория удалена
  */
 router.delete('/:id', authenticateToken, CategoryController.deleteCategory);
 
 /**
- * @route POST /categories/:categoryId/items
- * @desc Добавление пункта в категорию
- * @access Private
+ * @swagger
+ * /categories/{categoryId}/items:
+ *   post:
+ *     tags: [Categories]
+ *     summary: Добавление пункта в категорию
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Пункт добавлен
  */
 router.post('/:categoryId/items', authenticateToken, CategoryController.addItem);
 
 /**
- * @route PUT /categories/:categoryId/items/:itemId
- * @desc Обновление пункта
- * @access Private
+ * @swagger
+ * /categories/{categoryId}/items/{itemId}:
+ *   put:
+ *     tags: [Categories]
+ *     summary: Обновление пункта
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: itemId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Пункт обновлен
  */
 router.put('/:categoryId/items/:itemId', authenticateToken, CategoryController.updateItem);
 
 /**
- * @route DELETE /categories/:categoryId/items/:itemId
- * @desc Удаление пункта
- * @access Private
+ * @swagger
+ * /categories/{categoryId}/items/{itemId}:
+ *   delete:
+ *     tags: [Categories]
+ *     summary: Удаление пункта
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: categoryId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *       - in: path
+ *         name: itemId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Пункт удален
  */
 router.delete('/:categoryId/items/:itemId', authenticateToken, CategoryController.deleteItem);
 

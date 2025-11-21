@@ -48,37 +48,131 @@ const upload = multer({
 });
 
 /**
- * @route POST /news
- * @desc Создание новой новости
- * @access Private
+ * @swagger
+ * tags:
+ *   name: News
+ *   description: Управление новостями
+ */
+
+/**
+ * @swagger
+ * /news:
+ *   post:
+ *     tags: [News]
+ *     summary: Создание новой новости
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - date
+ *               - image
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *                 format: date
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: Новость создана
  */
 router.post('/', authenticateToken, upload.single('image'), NewsController.createNews);
 
 /**
- * @route GET /news
- * @desc Получение всех новостей
- * @access Public
+ * @swagger
+ * /news:
+ *   get:
+ *     tags: [News]
+ *     summary: Получение всех новостей
+ *     responses:
+ *       200:
+ *         description: Список новостей
  */
 router.get('/', NewsController.getAllNews);
 
 /**
- * @route GET /news/:id
- * @desc Получение новости по ID
- * @access Public
+ * @swagger
+ * /news/{id}:
+ *   get:
+ *     tags: [News]
+ *     summary: Получение новости по ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Новость найдена
  */
 router.get('/:id', NewsController.getNewsById);
 
 /**
- * @route PUT /news/:id
- * @desc Обновление новости
- * @access Private
+ * @swagger
+ * /news/{id}:
+ *   put:
+ *     tags: [News]
+ *     summary: Обновление новости
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               date:
+ *                 type: string
+ *                 format: date
+ *               image:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Новость обновлена
  */
 router.put('/:id', authenticateToken, upload.single('image'), NewsController.updateNews);
 
 /**
- * @route DELETE /news/:id
- * @desc Удаление новости
- * @access Private
+ * @swagger
+ * /news/{id}:
+ *   delete:
+ *     tags: [News]
+ *     summary: Удаление новости
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Новость удалена
  */
 router.delete('/:id', authenticateToken, NewsController.deleteNews);
 
